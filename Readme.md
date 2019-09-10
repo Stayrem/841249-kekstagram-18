@@ -1,7 +1,7 @@
 # Личный проект «Кекстаграм» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Спирин](https://up.htmlacademy.ru/javascript/18/user/841249).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий Шамрило](https://htmlacademy.ru/profile/shamrilods).
 
 ---
 

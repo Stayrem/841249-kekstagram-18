@@ -1,6 +1,5 @@
 'use strict';
 
-var photoInfo = [];
 var MAX_LIKES = 200;
 var MIN_LIKES = 15;
 var MIN_AVATAR_INDEX = 1;
@@ -13,7 +12,8 @@ var randomInt = function (min, max) {
   return Math.floor(random);
 };
 
-var getPicture = function () {
+var getPictures = function () {
+  var photoInfo = [];
   for (var i = 1; i <= 25; i++) {
     var picture = {
       url: 'photos/' + i + '.jpg',
@@ -39,10 +39,11 @@ var getPicture = function () {
 
     photoInfo.push(picture);
   }
-  createElement(photoInfo);
+  return photoInfo;
 };
 
-var createElement = function (data) {
+var pictures = getPictures();
+var renderPictures = function (data) {
   var template = document.querySelector('#picture').content.querySelector('a');
 
   var fragment = document.createDocumentFragment();
@@ -56,4 +57,5 @@ var createElement = function (data) {
   document.querySelector('.pictures').appendChild(fragment);
 };
 
-getPicture();
+renderPictures(pictures);
+

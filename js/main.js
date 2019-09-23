@@ -27,23 +27,7 @@ var getPictures = function () {
       url: 'photos/' + i + '.jpg',
       description: DESCRIPTIONS[getRandomNumber(0, DESCRIPTIONS.length - 1)],
       likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
-      comments: [
-        {
-          avatar: '../img/avatar/' + getRandomNumber(MIN_AVATAR_INDEX, MAX_AVATAR_INDEX) + '.svg',
-          name: NAMES[getRandomNumber(0, NAMES.length - 1)],
-          message: MESSAGES[getRandomNumber(0, MESSAGES.length)]
-        },
-        {
-          avatar: '../img/avatar/' + getRandomNumber(MIN_AVATAR_INDEX, MAX_AVATAR_INDEX) + '.svg',
-          name: NAMES[getRandomNumber(0, NAMES.length - 1)],
-          message: MESSAGES[getRandomNumber(0, MESSAGES.length)]
-        },
-        {
-          avatar: '../img/avatar/' + getRandomNumber(MIN_AVATAR_INDEX, MAX_AVATAR_INDEX) + '.svg',
-          name: NAMES[getRandomNumber(0, NAMES.length - 1)],
-          message: MESSAGES[getRandomNumber(0, MESSAGES.length)]
-        }
-      ]
+      comments: comments
     };
 
     photoInfo.push(picture);

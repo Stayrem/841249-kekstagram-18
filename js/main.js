@@ -29,7 +29,6 @@ var getPictures = function () {
       likes: getRandomNumber(MIN_LIKES, MAX_LIKES),
       comments: comments
     };
-
     photoInfo.push(picture);
   }
   return photoInfo;
@@ -51,4 +50,108 @@ var renderPictures = function (data) {
 };
 
 renderPictures(pictures);
+var ESC_KEYCODE = 27;
+var imageEditor = document.querySelector('.img-upload__overlay');
+var imageUploadForm = document.querySelector('.img-upload__form');
+var imageUploadInput = imageUploadForm.querySelector('.img-upload__input');
+var imageEditCloseBtn = imageEditor.querySelector('#upload-cancel');
+var effectLevelPin = imageEditor.querySelector('.effect-level__pin');
+var effectLevelValue = imageEditor.querySelector('.effect-level__value').value;
 
+var closeImageEditor = function () {
+  imageEditor.classList.add('hidden');
+  imageUploadForm.reset();
+};
+
+imageUploadInput.addEventListener('change', function () {
+  imageEditor.classList.remove('hidden');
+});
+
+imageUploadForm.addEventListener('submit', hashTagValidator);
+
+document.addEventListener('keydown', function (e) {
+  if (e.keyCode === ESC_KEYCODE) {
+    closeImageEditor();
+  }
+});
+
+imageEditCloseBtn.addEventListener('click', closeImageEditor);
+
+effectLevelPin.addEventListener('mouseup', function () {
+  var effectLine = document.querySelector('.effect-level__line');
+  var effectLineWidth = effectLine.offsetWidth;
+  effectLevelValue.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
+});
+
+var setEffect = function () {
+  var imagePreview = imageEditor.querySelector('.img-upload__preview img');
+  var effectItem = imageEditor.querySelectorAll('.effects__item');
+
+  for (var i = 0; i < effectItem.length; i++) {
+    effectItem[i].addEventListener('click', function () {
+      imageUploadForm.reset();
+      var effectInput = this.querySelector('.effects__radio');
+      if (effectInput.value === 'none') {
+        imagePreview.setAttribute('style', 'filter: unset;');
+      } else if (effectInput.value === 'chrome') {
+        imagePreview.setAttribute('style', 'filter: grayscale(' + effectLevelValue + ');');
+      } else if (effectInput.value === 'sepia') {
+        imagePreview.setAttribute('style', 'filter: sepia(' + effectLevelValue + ');');
+      } else if (effectInput.value === 'marvin') {
+        imagePreview.setAttribute('style', 'filter: invert(' + effectLevelValue + '%);');
+      } else if (effectInput.value === 'phobos') {
+        imagePreview.setAttribute('style', 'filter: blur(' + effectLevelValue + 'px);');
+      } else if (effectInput.value === 'heat') {
+        imagePreview.setAttribute('style', 'filter: brightness(' + effectLevelValue + ');');
+      }
+    });
+  }
+};
+
+var hashTagValidator = function () {
+  var hashTagInput = imageEditor.querySelector('.text__hashtags');
+  var checkSameValue = function (arr) {
+    for (var i = 0; i < arr.length; i++) {
+      for (var index = 1; index < arr.length; index++) {
+        if (arr[i] === arr[index]) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  var checkDoubleHash = function (arr) {
+    for (var i = 0; i < arr.length; i++) {
+      for (var index = 1; index < arr.length; index++) {
+        if (arr[i][index] === '#') {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+  hashTagInput.addEventListener('input', function (e) {
+    var hashTags = hashTagInput.value.split(' ');
+    var target = e.target;
+    for (var i = 0; i < hashTags.length; i++) {
+      if (hashTags[i][0] !== '#') {
+        console.log(hashTags[i][0])
+        target.setCustomValidity('Хэштэг должен начинаться с \"#\"');
+      } else if (hashTags[i].length < 1) {
+        target.setCustomValidity('Хэштэг не может состоять только из \"#\"');
+      } else if (i > 5) {
+        target.setCustomValidity('Максимальное количество хэштэгов: 5');
+      } else if (hashTags[i].length > 20) {
+        target.setCustomValidity('Максимальная длина одного хэштэга: 20');
+      } else if (checkSameValue(hashTags)) {
+        target.setCustomValidity('не должно быть одинаковых Хэштэгов');
+      } else if (checkDoubleHash(hashTags)) {
+        target.setCustomValidity('не должно быть больше двух символов \"#\" в Хэштеге');
+      }
+    }
+  });
+};
+
+setEffect();
+hashTagValidator();

@@ -56,87 +56,100 @@ var imageUploadForm = document.querySelector('.img-upload__form');
 var imageUploadInput = imageUploadForm.querySelector('.img-upload__input');
 var imageEditCloseBtn = imageEditor.querySelector('#upload-cancel');
 var effectLevelPin = imageEditor.querySelector('.effect-level__pin');
-var effectLevelValue = imageEditor.querySelector('.effect-level__value').value;
+var effectLevel = imageEditor.querySelector('.effect-level__value');
+var effectRadioFieldset = imageEditor.querySelector('.img-upload__effects');
+effectLevel = effectLevel.value;
 
-var closeImageEditor = function () {
+var onPopupClose = function () {
   imageEditor.classList.add('hidden');
   imageUploadForm.reset();
 };
 
 imageUploadInput.addEventListener('change', function () {
   imageEditor.classList.remove('hidden');
+  document.addEventListener('keydown', function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      onPopupClose();
+    }
+  });
+  imageEditCloseBtn.addEventListener('click', onPopupClose);
+  hashTagValidator();
 });
-
-imageUploadForm.addEventListener('submit', hashTagValidator);
-
-document.addEventListener('keydown', function (e) {
-  if (e.keyCode === ESC_KEYCODE) {
-    closeImageEditor();
-  }
-});
-
-imageEditCloseBtn.addEventListener('click', closeImageEditor);
 
 effectLevelPin.addEventListener('mouseup', function () {
   var effectLine = document.querySelector('.effect-level__line');
   var effectLineWidth = effectLine.offsetWidth;
-  effectLevelValue.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
+  effectLevel.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
 });
 
-var setEffect = function () {
-  var imagePreview = imageEditor.querySelector('.img-upload__preview img');
-  var effectItem = imageEditor.querySelectorAll('.effects__item');
+var getValueFilter = function (max) {
+  return effectLevel * 100 / max;
+};
 
-  for (var i = 0; i < effectItem.length; i++) {
-    effectItem[i].addEventListener('click', function () {
-      imageUploadForm.reset();
-      var effectInput = this.querySelector('.effects__radio');
-      if (effectInput.value === 'none') {
-        imagePreview.setAttribute('style', 'filter: unset;');
-      } else if (effectInput.value === 'chrome') {
-        imagePreview.setAttribute('style', 'filter: grayscale(' + effectLevelValue + ');');
-      } else if (effectInput.value === 'sepia') {
-        imagePreview.setAttribute('style', 'filter: sepia(' + effectLevelValue + ');');
-      } else if (effectInput.value === 'marvin') {
-        imagePreview.setAttribute('style', 'filter: invert(' + effectLevelValue + '%);');
-      } else if (effectInput.value === 'phobos') {
-        imagePreview.setAttribute('style', 'filter: blur(' + effectLevelValue + 'px);');
-      } else if (effectInput.value === 'heat') {
-        imagePreview.setAttribute('style', 'filter: brightness(' + effectLevelValue + ');');
-      }
-    });
+var setEffect = function () {
+  var uploadImage = imageEditor.querySelector('.img-upload__preview');
+
+  effectRadioFieldset.addEventListener('change', function (evt) {
+    var effectRadioButton = evt.target;
+    uploadImage.classList.add('effects__preview--' + effectRadioButton.value);
+    switch (effectRadioButton) {
+      case 'chrome':
+        uploadImage.style.filter = 'grayscale(' + getValueFilter(1) + ')';
+        break;
+      case 'sepia':
+        uploadImage.style.filter = 'sepia(' + getValueFilter(1) + ')';
+        break;
+      case 'marvin':
+        uploadImage.style.filter = 'invert(' + effectLevel + '%)';
+        break;
+      case 'phobos':
+        uploadImage.style.filter = 'blur(' + getValueFilter(1) + 'px)';
+        break;
+      case 'heat':
+        uploadImage.style.filter = 'brightness(' + getValueFilter(1) + ')';
+        break;
+      case 'none':
+        uploadImage.style.filter = 'brightness(' + getValueFilter(1) + ')';
+        break;
+    }
+  });
+};
+
+var removeEmptySpaces = function (arr) {
+  var cleanArray = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] !== ' ') {
+      cleanArray.push(arr[i]);
+    }
   }
+  return cleanArray;
+};
+
+var setArrayToLowerCase = function (arr) {
+  for (var i = 0; i < arr.length; i++) {
+    arr[i] = arr[i].toLowerCase();
+  }
+  return arr;
+};
+
+var checkExcessHashTag = function (arr) {
+  for (var i = 1; i < arr.length; i++) {
+    if (arr[i] === '#') {
+      return true;
+    }
+  }
+  return false;
 };
 
 var hashTagValidator = function () {
   var hashTagInput = imageEditor.querySelector('.text__hashtags');
-  var checkSameValue = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var index = 1; index < arr.length; index++) {
-        if (arr[i] === arr[index]) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
+  var hashTags = hashTagInput.value.split(' ');
+  hashTags = setArrayToLowerCase(hashTags);
 
-  var checkDoubleHash = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-      for (var index = 1; index < arr.length; index++) {
-        if (arr[i][index] === '#') {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-  hashTagInput.addEventListener('input', function (e) {
-    var hashTags = hashTagInput.value.split(' ');
-    var target = e.target;
+  hashTagInput.addEventListener('input', function (evt) {
+    var target = evt.target;
     for (var i = 0; i < hashTags.length; i++) {
       if (hashTags[i][0] !== '#') {
-        console.log(hashTags[i][0])
         target.setCustomValidity('Хэштэг должен начинаться с \"#\"');
       } else if (hashTags[i].length < 1) {
         target.setCustomValidity('Хэштэг не может состоять только из \"#\"');
@@ -144,14 +157,12 @@ var hashTagValidator = function () {
         target.setCustomValidity('Максимальное количество хэштэгов: 5');
       } else if (hashTags[i].length > 20) {
         target.setCustomValidity('Максимальная длина одного хэштэга: 20');
-      } else if (checkSameValue(hashTags)) {
-        target.setCustomValidity('не должно быть одинаковых Хэштэгов');
-      } else if (checkDoubleHash(hashTags)) {
-        target.setCustomValidity('не должно быть больше двух символов \"#\" в Хэштеге');
+      } else if (checkExcessHashTag(hashTags)) {
+        target.setCustomValidity('В одном хэштеге не может быть больше одного символа \"#\"');
       }
     }
   });
 };
 
 setEffect();
-hashTagValidator();
+

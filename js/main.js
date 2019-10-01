@@ -64,7 +64,7 @@ var HASH_TAG_MAX_NUMBER = 5;
 var MAX_HASH_TAG_LENGTH = 20;
 effectLevel = effectLevel.value;
 
-var onPopupClose = function () {
+var closePopup = function () {
   imageEditor.classList.add('hidden');
   imageUploadForm.reset();
 };
@@ -74,10 +74,10 @@ imageUploadInput.addEventListener('change', function () {
   effectRadioFieldset.addEventListener('change', setEffect);
   document.addEventListener('keydown', function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      onPopupClose();
+      closePopup();
     }
   });
-  imageEditCloseBtn.addEventListener('click', onPopupClose);
+  imageEditCloseBtn.addEventListener('click', closePopup);
 });
 
 effectLevelPin.addEventListener('mouseup', function () {
@@ -123,7 +123,7 @@ var setEffect = function (evt) {
 
 var checkValidHashTag = function (hashtagStr) {
   hashTagInput.setCustomValidity('');
-  var hashTagArray = hashtagStr.trim().toLowerCase().split();
+  var hashTagArray = hashtagStr.trim().toLowerCase().split(' ');
   if (hashTagArray === '') {
     return '';
   }
@@ -136,7 +136,6 @@ var checkValidHashTag = function (hashtagStr) {
     errorText = 'Количество хэштэгов больше 5';
     return errorText;
   }
-  var arrayCopy = newHashTagArray;
 
   for (var i = 0; i < newHashTagArray.length; i++) {
     var currentHash = newHashTagArray[i];
@@ -146,7 +145,7 @@ var checkValidHashTag = function (hashtagStr) {
       errorText = 'в хэштеге должны быть символы кроме #';
     } else if (currentHash.length > MAX_HASH_TAG_LENGTH) {
       errorText = 'максимальная длина хэштэга:' + MAX_HASH_TAG_LENGTH + 'символов';
-    } else if (arrayCopy.indexOf(currentHash, i + 1) !== -1) {
+    } else if (newHashTagArray.indexOf(currentHash, i + 1) !== -1) {
       errorText = 'хэштеги не могут быть одинаковыми';
     }
     if (errorText) {
@@ -156,8 +155,7 @@ var checkValidHashTag = function (hashtagStr) {
   return errorText;
 };
 
-uploadFormSubmit.addEventListener('click', function (evt) {
-  evt.preventDefault();
+uploadFormSubmit.addEventListener('click', function () {
   var textErrorHashTag = checkValidHashTag(hashTagInput.value);
 
   if (textErrorHashTag !== '') {

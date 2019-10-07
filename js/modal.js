@@ -2,8 +2,8 @@
 
 (function () {
   var ESC_KEYCODE = 27;
-  var effectRadioFieldset = imageEditor.querySelector('.img-upload__effects');
   var imageEditor = document.querySelector('.img-upload__overlay');
+  var effectRadioFieldset = imageEditor.querySelector('.img-upload__effects');
   window.imageEditor = imageEditor;
   var imageUploadForm = document.querySelector('.img-upload__form');
   window.imageUploadForm = imageUploadForm;

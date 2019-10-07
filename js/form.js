@@ -7,7 +7,6 @@
   var uploadFormSubmit = window.imageUploadForm.querySelector('.img-upload__submit');
   var HASH_TAG_MAX_NUMBER = 5;
   var MAX_HASH_TAG_LENGTH = 20;
-  effectLevel = effectLevel.value;
 
   effectLevelPin.addEventListener('mouseup', function () {
     var effectLine = document.querySelector('.effect-level__line');

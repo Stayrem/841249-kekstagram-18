@@ -7,27 +7,32 @@
   var uploadFormSubmit = window.imageUploadForm.querySelector('.img-upload__submit');
   var HASH_TAG_MAX_NUMBER = 5;
   var MAX_HASH_TAG_LENGTH = 20;
-
+  var uploadImage = window.imageEditor.querySelector('.img-upload__preview');
+  var effectRadioButtonValue = 'none';
   effectLevelPin.addEventListener('mouseup', function () {
     var effectLine = document.querySelector('.effect-level__line');
     var effectLineWidth = effectLine.offsetWidth;
     effectLevel.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
+    setFilter(effectRadioButtonValue);
   });
 
   var getValueFilter = function (min, max) {
-    return ((max - min) / 100) * effectLevel + min;
+    return (max + min) / 100 * effectLevel.value;
   };
 
-  var uploadImage = window.imageEditor.querySelector('.img-upload__preview');
   var currentClass = null;
 
   var setEffect = function (evt) {
-    effectLevel = 100;
-    uploadImage.classList.remove('effects__preview--' + currentClass);
-    var effectRadioButton = evt.target;
-    uploadImage.classList.add('effects__preview--' + effectRadioButton.value);
-    currentClass = effectRadioButton.value;
-    switch (effectRadioButton.value) {
+    effectRadioButtonValue = evt.target.value;
+    effectLevel.value = 100;
+    uploadImage.classList.remove(currentClass);
+    currentClass = 'effects__preview--' + effectRadioButtonValue;
+    uploadImage.classList.add(currentClass);
+    setFilter(effectRadioButtonValue);
+  };
+
+  var setFilter = function (filterType) {
+    switch (filterType) {
       case 'chrome':
         uploadImage.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
         break;
@@ -43,20 +48,22 @@
       case 'heat':
         uploadImage.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
         break;
-      case 'none':
+      default:
         uploadImage.style.filter = '';
         break;
     }
   };
+
   window.setEffect = setEffect;
   var checkValidHashTag = function (hashtagStr) {
     hashTagInput.setCustomValidity('');
-    var hashTagArray = hashtagStr.trim().toLowerCase().split(' ');
-    if (hashTagArray === '') {
+    if (hashtagStr.trim() === '') {
       return '';
     }
-    var newHashTagArray = hashTagArray.map(function (element) {
-      return element.trim();
+    var hashTagArray = hashtagStr.trim().toLowerCase().split(' ');
+
+    var newHashTagArray = hashTagArray.filter(function (element) {
+      return element;
     });
     var errorText = '';
 

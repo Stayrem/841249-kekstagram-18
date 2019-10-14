@@ -1,10 +1,11 @@
 'use strict';
 
 (function () {
-  var renderPictures = function (data) {
+  var successHandler = function (data) {
     var template = document.querySelector('#picture').content.querySelector('.picture');
     var picturesContainer = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
+
     for (var i = 0; i < data.length; i++) {
       var element = template.cloneNode(true);
       element.querySelector('.picture__img').src = data[i].url;
@@ -14,6 +15,35 @@
     }
     picturesContainer.appendChild(fragment);
   };
+  var errorHandler = function () {
+    var template = document.querySelector('#error').content.querySelector('.error');
+    var erroContainer = document.querySelector('main');
+    var fragment = document.createDocumentFragment();
 
-  renderPictures(window.pictures);
+    fragment.appendChild(template);
+    erroContainer.appendChild(fragment);
+    var dialog = document.querySelector('.error');
+    var dialogInner = dialog.querySelector('.error__inner');
+
+    var closeErrorDialog = function () {
+      dialog.remove();
+    };
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.esc) {
+        closeErrorDialog();
+      }
+    });
+
+    document.addEventListener('click', function (evt) {
+      var target = evt.target;
+      if (target.classList.contains('error__button')) {
+        closeErrorDialog();
+      } else if (!dialogInner.contains(target)) {
+        closeErrorDialog();
+
+      }
+    });
+  };
+
+  window.load(successHandler, errorHandler);
 })();

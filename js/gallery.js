@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var successHandler = function (data) {
+  var renderPhoto = function (data) {
     var template = document.querySelector('#picture').content.querySelector('.picture');
     var picturesContainer = document.querySelector('.pictures');
     var fragment = document.createDocumentFragment();
@@ -28,22 +28,27 @@
     var closeErrorDialog = function () {
       dialog.remove();
     };
-    document.addEventListener('keydown', function (evt) {
+
+    var escapePressListener = function (evt) {
       if (evt.keyCode === window.esc) {
         closeErrorDialog();
       }
-    });
+    };
 
-    document.addEventListener('click', function (evt) {
+    var errorCloseEventListener = function (evt) {
       var target = evt.target;
       if (target.classList.contains('error__button')) {
         closeErrorDialog();
       } else if (!dialogInner.contains(target)) {
         closeErrorDialog();
-
       }
-    });
-  };
+    };
 
-  window.load(successHandler, errorHandler);
+    document.addEventListener('keydown', escapePressListener);
+
+    document.addEventListener('click', errorCloseEventListener);
+
+  };
+  window.renderPhoto = renderPhoto;
+  window.load(renderPhoto, errorHandler);
 })();

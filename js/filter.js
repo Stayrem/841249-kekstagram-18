@@ -4,15 +4,17 @@
   var popularPhotos = null;
   window.popularPhotos = popularPhotos;
   var sortByPopular = function () {
-    popularPhotos = window.responseData.sort(function (a, b) {
+    popularPhotos = window.globalVars.responseData.slice().sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
-    window.renderPhoto(popularPhotos);
+    window.utils.renderPhoto(popularPhotos);
   };
+
   var sortRandom = function () {
-    var shuffledArr = window.responseData.sort(function () {
+    var shuffledArr = window.globalVars.responseData.slice().sort(function () {
       return Math.random() - 0.5;
     });
+
     var tenShuffledArr = [];
     var maxArrLength = 10;
     shuffledArr.forEach(function (item, i) {
@@ -20,42 +22,32 @@
         tenShuffledArr.push(item);
       }
     });
-    window.renderPhoto(tenShuffledArr);
+    window.utils.renderPhoto(tenShuffledArr);
   };
+
+  var setDefaultOrder = function () {
+    window.utils.renderPhoto(window.globalVars.responseData);
+  };
+
   filterForm.addEventListener('click', function (evt) {
     var renderedPhotos = document.querySelectorAll('.picture');
-    for (var index = 0; index < renderedPhotos.length; index++) {
-      renderedPhotos[index].remove();
-    }
+    renderedPhotos.forEach(function (item) {
+      item.remove();
+    });
+
     var target = evt.target;
     var filterType = target.id;
     var lastTimeOut;
     switch (filterType) {
       case 'filter-random':
-        if (lastTimeOut) {
-          window.clearTimeout(lastTimeOut);
-        }
-        lastTimeOut = window.setTimeout(function () {
-          sortRandom();
-        }, 500);
+        window.utils.rattling(lastTimeOut, sortRandom);
         break;
       case 'filter-discussed':
-        if (lastTimeOut) {
-          window.clearTimeout(lastTimeOut);
-        }
-        lastTimeOut = window.setTimeout(function () {
-          sortByPopular();
-        }, 500);
-
+        window.utils.rattling(lastTimeOut, sortByPopular);
         break;
       default:
-        if (lastTimeOut) {
-          window.clearTimeout(lastTimeOut);
-        }
-        lastTimeOut = window.setTimeout(function () {
-          window.renderPhoto(window.originData);
-        }, 500);
-
+        window.utils.rattling(lastTimeOut, setDefaultOrder);
     }
   });
+
 })();

@@ -1,13 +1,11 @@
 'use strict';
 
 (function () {
-  var effectLevelPin = window.imageEditor.querySelector('.effect-level__pin');
-  var effectLevel = window.imageEditor.querySelector('.effect-level__value');
-  var hashTagInput = window.imageEditor.querySelector('.text__hashtags');
-  var uploadFormSubmit = window.imageUploadForm.querySelector('.img-upload__submit');
-  var HASH_TAG_MAX_NUMBER = 5;
-  var MAX_HASH_TAG_LENGTH = 20;
-  var uploadImage = window.imageEditor.querySelector('.img-upload__preview');
+  var effectLevelPin = window.elements.imageEditor.querySelector('.effect-level__pin');
+  var effectLevel = window.elements.imageEditor.querySelector('.effect-level__value');
+  var hashTagInput = window.elements.imageEditor.querySelector('.text__hashtags');
+  var uploadFormSubmit = window.elements.imageUploadForm.querySelector('.img-upload__submit');
+  var uploadImage = window.elements.imageEditor.querySelector('.img-upload__preview');
   var effectRadioButtonValue = 'none';
   effectLevelPin.addEventListener('mouseup', function () {
     var effectLine = document.querySelector('.effect-level__line');
@@ -67,7 +65,7 @@
     });
     var errorText = '';
 
-    if (newHashTagArray.length > HASH_TAG_MAX_NUMBER) {
+    if (newHashTagArray.length > window.constants.HASH_TAG_MAX_NUMBER) {
       errorText = 'Количество хэштэгов больше 5';
       return errorText;
     }
@@ -78,8 +76,8 @@
         errorText = 'хэштэг должен начинаться с #';
       } else if (currentHash.length === 1) {
         errorText = 'в хэштеге должны быть символы кроме #';
-      } else if (currentHash.length > MAX_HASH_TAG_LENGTH) {
-        errorText = 'максимальная длина хэштэга:' + MAX_HASH_TAG_LENGTH + 'символов';
+      } else if (currentHash.length > window.constants.MAX_HASH_TAG_LENGTH) {
+        errorText = 'максимальная длина хэштэга:' + window.constants.MAX_HASH_TAG_LENGTH + 'символов';
       } else if (newHashTagArray.indexOf(currentHash, i + 1) !== -1) {
         errorText = 'хэштеги не могут быть одинаковыми';
       }
@@ -96,7 +94,7 @@
     if (textErrorHashTag !== '') {
       hashTagInput.setCustomValidity(textErrorHashTag);
     } else {
-      window.imageUploadForm.submit();
+      window.elemrnts.imageUploadForm.submit();
     }
   });
 

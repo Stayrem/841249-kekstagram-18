@@ -2,6 +2,7 @@
 (function () {
   var filterForm = document.querySelector('.img-filters__form');
   var popularPhotos = null;
+  var filterButtons = document.querySelectorAll('.img-filters__button');
   window.popularPhotos = popularPhotos;
   var sortByPopular = function () {
     popularPhotos = window.globalVars.responseData.slice().sort(function (a, b) {
@@ -16,12 +17,10 @@
     });
 
     var tenShuffledArr = [];
-    var maxArrLength = 10;
-    shuffledArr.forEach(function (item, i) {
-      if (i < maxArrLength) {
-        tenShuffledArr.push(item);
-      }
+    shuffledArr.forEach(function (item) {
+      tenShuffledArr.push(item);
     });
+    tenShuffledArr = tenShuffledArr.slice(10);
     window.utils.renderPhoto(tenShuffledArr);
   };
 
@@ -30,6 +29,9 @@
   };
 
   filterForm.addEventListener('click', function (evt) {
+    filterButtons.forEach(function (item) {
+      item.classList.remove('img-filters__button--active');
+    });
     var renderedPhotos = document.querySelectorAll('.picture');
     renderedPhotos.forEach(function (item) {
       item.remove();
@@ -37,7 +39,9 @@
 
     var target = evt.target;
     var filterType = target.id;
+    var currentButton = document.querySelector('#' + filterType);
     var lastTimeOut;
+    currentButton.classList.add('img-filters__button--active');
     switch (filterType) {
       case 'filter-random':
         window.utils.rattling(lastTimeOut, sortRandom);

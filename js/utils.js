@@ -88,7 +88,6 @@
           p.textContent = window.globalVars.responseData[0].comments[i].message;
           li.appendChild(img);
           li.appendChild(p);
-          console.log(li)
           fragment.appendChild(li);
         }
         comments.appendChild(fragment);

@@ -7,13 +7,45 @@
   var uploadFormSubmit = window.elements.imageUploadForm.querySelector('.img-upload__submit');
   var uploadImage = window.elements.imageEditor.querySelector('.img-upload__preview');
   var effectRadioButtonValue = 'none';
-  effectLevelPin.addEventListener('mouseup', function () {
-    var effectLine = document.querySelector('.effect-level__line');
-    var effectLineWidth = effectLine.offsetWidth;
-    effectLevel.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
-    setFilter(effectRadioButtonValue);
-  });
 
+  effectLevelPin.addEventListener('mousedown', function (evt) {
+    evt.preventDefault();
+
+    var startCoords = {
+      x: evt.clientX
+    };
+
+    var onMouseUp = function (evtUp) {
+      evtUp.preventDefault();
+      document.removeEventListener('mousemove', onMouseMove);
+      var effectLine = document.querySelector('.effect-level__line');
+      var effectLineWidth = effectLine.offsetWidth;
+      effectLevel.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
+      setFilter(effectRadioButtonValue);
+    };
+
+    var onMouseMove = function (evtMove) {
+      evtMove.preventDefault();
+      var effectLevelLine = document.querySelector('.effect-level__depth');
+
+      var shift = {
+        x: startCoords.x - evtMove.clientX
+      };
+
+      startCoords = {
+        x: evtMove.clientX
+      };
+      var pinCurrentPosition = effectLevelPin.offsetLeft - shift.x;
+      if (pinCurrentPosition >= window.constants.PIN_MIN_POSITION && pinCurrentPosition <= window.constants.PIN_MAX_POSITION) {
+        effectLevelPin.style.left = (pinCurrentPosition) + 'px';
+        effectLevelLine.style.width = (pinCurrentPosition) + 'px';
+      }
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+
+  });
 
   var getValueFilter = function (min, max) {
     return (max + min) / 100 * effectLevel.value;

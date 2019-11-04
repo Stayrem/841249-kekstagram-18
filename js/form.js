@@ -14,6 +14,7 @@
     setFilter(effectRadioButtonValue);
   });
 
+
   var getValueFilter = function (min, max) {
     return (max + min) / 100 * effectLevel.value;
   };

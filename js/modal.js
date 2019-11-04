@@ -7,7 +7,7 @@
   var imageUploadForm = document.querySelector('.img-upload__form');
   var imageUploadInput = imageUploadForm.querySelector('.img-upload__input');
   var imageEditCloseBtn = imageEditor.querySelector('#upload-cancel');
-  var commentsInput = document.querySelector('.text__description')
+  var commentsInput = document.querySelector('.text__description');
 
   var closePopup = function () {
     imageEditor.classList.add('hidden');

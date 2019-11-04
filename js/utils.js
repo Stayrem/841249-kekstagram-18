@@ -57,6 +57,11 @@
 
       document.addEventListener('click', errorCloseEventListener);
     },
+    upload: function () {
+      var xhr = new XMLHttpRequest();
+      xhr.open('POST', 'https://js.dump.academy/kekstagram');
+      xhr.setRequestHeader('Content-Type', ' multipart/form-data');
+    },
     showBigPicture: function () {
       var pictures = document.querySelectorAll('.picture');
       var bigPicture = document.querySelector('.big-picture');
@@ -68,8 +73,6 @@
       var socialCommentCount = bigPicture.querySelector('.social__comment-count');
       var commentsLoader = bigPicture.querySelector('.comments-loader');
       var bigPictureCloseBtn = bigPicture.querySelector('.big-picture__cancel');
-      socialCommentCount.classList.add('visually-hidden');
-      commentsLoader.classList.add('visually-hidden');
 
       var setComments = function (index) {
         var commentsLength = window.globalVars.responseData[index].comments.length;
@@ -77,6 +80,9 @@
         for (var i = 0; i < commentsLength; i++) {
           var li = document.createElement('li');
           li.classList.add('social__comment');
+          if (i > 4) {
+            li.classList.add('visually-hidden');
+          }
           var img = document.createElement('img');
           img.classList.add('social__picture');
           img.setAttribute('width', '35');
@@ -92,6 +98,15 @@
         }
         comments.appendChild(fragment);
       };
+      var showAllComments = function () {
+        var allComments = comments.querySelectorAll('.social__comment');
+        allComments.forEach(function (item) {
+          item.classList.remove('visually-hidden');
+        });
+        commentsLoader.classList.add('visually-hidden');
+        socialCommentCount.classList.add('visually-hidden');
+      };
+      commentsLoader.addEventListener('click', showAllComments);
 
       var closeBigPicture = function (evt) {
         var target = evt.target.id;
@@ -104,6 +119,8 @@
         bigPicture.classList.remove('hidden');
         document.addEventListener('keydown', closeBigPicture);
         bigPictureCloseBtn.addEventListener('click', closeBigPicture);
+        commentsLoader.classList.remove('visually-hidden');
+        socialCommentCount.classList.remove('visually-hidden');
       };
 
       pictures.forEach(function (item, i) {

@@ -14,6 +14,7 @@
     imageUploadForm.reset();
   };
 
+  window.closePopup = closePopup;
   commentsInput.addEventListener('click', function () {
     document.removeEventListener('keydown', closeImageEditorOnEsc);
   });

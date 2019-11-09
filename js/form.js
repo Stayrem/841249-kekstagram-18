@@ -7,6 +7,8 @@
   var uploadFormSubmit = window.elements.imageUploadForm.querySelector('.img-upload__submit');
   var uploadImage = window.elements.imageEditor.querySelector('.img-upload__preview');
   var effectRadioButtonValue = 'none';
+  var effectLevelContainer = document.querySelector('.img-upload__effect-level');
+  var effectLevelLine = document.querySelector('.effect-level__depth');
 
   effectLevelPin.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -26,7 +28,6 @@
 
     var onMouseMove = function (evtMove) {
       evtMove.preventDefault();
-      var effectLevelLine = document.querySelector('.effect-level__depth');
 
       var shift = {
         x: startCoords.x - evtMove.clientX
@@ -54,6 +55,8 @@
   var currentClass = null;
 
   var setEffect = function (evt) {
+    effectLevelLine.style.width = '100%';
+    effectLevelPin.style.left = '100%';
     effectRadioButtonValue = evt.target.value;
     effectLevel.value = 100;
     uploadImage.classList.remove(currentClass);
@@ -66,21 +69,26 @@
     switch (filterType) {
       case 'chrome':
         uploadImage.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
+        effectLevelContainer.classList.remove('hidden');
         break;
       case 'sepia':
         uploadImage.style.filter = 'sepia(' + getValueFilter(0, 1) + ')';
+        effectLevelContainer.classList.remove('hidden');
         break;
       case 'marvin':
         uploadImage.style.filter = 'invert(' + effectLevel + '%)';
+        effectLevelContainer.classList.remove('hidden');
         break;
       case 'phobos':
         uploadImage.style.filter = 'blur(' + getValueFilter(1, 3) + 'px)';
         break;
       case 'heat':
         uploadImage.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
+        effectLevelContainer.classList.remove('hidden');
         break;
       default:
         uploadImage.style.filter = '';
+        effectLevelContainer.classList.add('hidden');
         break;
     }
   };
@@ -121,13 +129,15 @@
     return errorText;
   };
 
-  uploadFormSubmit.addEventListener('click', function () {
+  uploadFormSubmit.addEventListener('click', function (evt) {
     var textErrorHashTag = checkValidHashTag(hashTagInput.value);
 
     if (textErrorHashTag !== '') {
       hashTagInput.setCustomValidity(textErrorHashTag);
     } else {
-      window.elemrnts.imageUploadForm.submit();
+      evt.preventDefault();
+      var formData = new FormData(window.elements.imageUploadForm);
+      window.backend.save(formData, window.successFormSend, window.errorHandler);
     }
   });
 

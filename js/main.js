@@ -1,4 +1,4 @@
 'use strict';
 (function () {
-  window.load(window.utils.renderPhoto, window.utils.errorHandler);
+  window.backend.load(window.renderPhoto, window.uploadErrorHandler);
 })();

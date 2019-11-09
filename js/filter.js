@@ -8,7 +8,7 @@
     popularPhotos = window.globalVars.responseData.slice().sort(function (a, b) {
       return b.comments.length - a.comments.length;
     });
-    window.utils.renderPhoto(popularPhotos);
+    window.renderPhoto(popularPhotos);
   };
 
   var sortRandom = function () {
@@ -21,11 +21,11 @@
       tenShuffledArr.push(item);
     });
     tenShuffledArr = tenShuffledArr.slice(10);
-    window.utils.renderPhoto(tenShuffledArr);
+    window.renderPhoto(tenShuffledArr);
   };
 
   var setDefaultOrder = function () {
-    window.utils.renderPhoto(window.globalVars.responseData);
+    window.renderPhoto(window.globalVars.responseData);
   };
 
   filterForm.addEventListener('click', function (evt) {
@@ -44,13 +44,13 @@
     currentButton.classList.add('img-filters__button--active');
     switch (filterType) {
       case 'filter-random':
-        window.utils.rattling(lastTimeOut, sortRandom);
+        window.utils.debounce(lastTimeOut, sortRandom);
         break;
       case 'filter-discussed':
-        window.utils.rattling(lastTimeOut, sortByPopular);
+        window.utils.debounce(lastTimeOut, sortByPopular);
         break;
       default:
-        window.utils.rattling(lastTimeOut, setDefaultOrder);
+        window.utils.debounce(lastTimeOut, setDefaultOrder);
     }
   });
 

@@ -5,7 +5,6 @@
   var effectLevel = window.elements.imageEditor.querySelector('.effect-level__value');
   var hashTagInput = window.elements.imageEditor.querySelector('.text__hashtags');
   var uploadFormSubmit = window.elements.imageUploadForm.querySelector('.img-upload__submit');
-  var uploadImage = window.elements.imageEditor.querySelector('.img-upload__preview');
   var effectRadioButtonValue = 'none';
   var effectLevelContainer = document.querySelector('.img-upload__effect-level');
   var effectLevelLine = document.querySelector('.effect-level__depth');
@@ -59,38 +58,42 @@
     effectLevelPin.style.left = '100%';
     effectRadioButtonValue = evt.target.value;
     effectLevel.value = 100;
-    uploadImage.classList.remove(currentClass);
+    window.elements.uploadImage.classList.remove(currentClass);
     currentClass = 'effects__preview--' + effectRadioButtonValue;
-    uploadImage.classList.add(currentClass);
+    window.elements.uploadImage.classList.add(currentClass);
     setFilter(effectRadioButtonValue);
   };
 
   var setFilter = function (filterType) {
     switch (filterType) {
       case 'chrome':
-        uploadImage.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
+        window.elements.uploadImage.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'sepia':
-        uploadImage.style.filter = 'sepia(' + getValueFilter(0, 1) + ')';
+        window.elements.uploadImage.style.filter = 'sepia(' + getValueFilter(0, 1) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'marvin':
-        uploadImage.style.filter = 'invert(' + effectLevel + '%)';
+        window.elements.uploadImage.style.filter = 'invert(' + effectLevel + '%)';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'phobos':
-        uploadImage.style.filter = 'blur(' + getValueFilter(1, 3) + 'px)';
+        window.elements.uploadImage.style.filter = 'blur(' + getValueFilter(1, 3) + 'px)';
         break;
       case 'heat':
-        uploadImage.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
+        window.elements.uploadImage.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       default:
-        uploadImage.style.filter = '';
+        window.elements.uploadImage.style.filter = '';
         effectLevelContainer.classList.add('hidden');
         break;
     }
+  };
+
+  var setInputError = function (input) {
+    input.style.boxShadow = '0px 0px 0px 4px red';
   };
 
   window.setEffect = setEffect;
@@ -108,6 +111,7 @@
 
     if (newHashTagArray.length > window.constants.HASH_TAG_MAX_NUMBER) {
       errorText = 'Количество хэштэгов больше 5';
+      setInputError(hashTagInput);
       return errorText;
     }
 
@@ -115,12 +119,16 @@
       var currentHash = newHashTagArray[i];
       if (currentHash[0] !== '#') {
         errorText = 'хэштэг должен начинаться с #';
+        setInputError(hashTagInput);
       } else if (currentHash.length === 1) {
         errorText = 'в хэштеге должны быть символы кроме #';
+        setInputError(hashTagInput);
       } else if (currentHash.length > window.constants.MAX_HASH_TAG_LENGTH) {
         errorText = 'максимальная длина хэштэга:' + window.constants.MAX_HASH_TAG_LENGTH + 'символов';
+        setInputError(hashTagInput);
       } else if (newHashTagArray.indexOf(currentHash, i + 1) !== -1) {
         errorText = 'хэштеги не могут быть одинаковыми';
+        setInputError(hashTagInput);
       }
       if (errorText) {
         break;

@@ -5,6 +5,8 @@
     URL: 'https://js.dump.academy/kekstagram/data',
     sendURL: 'https://js.dump.academy/kekstagram',
     STATUS_SUCCESS: 200,
+    MIN_PHOTO_SCALE: 25,
+    MAX_PHOTO_SCALE: 100,
     MAX_TIMEOUT: 10000,
     HASH_TAG_MAX_NUMBER: 5,
     MAX_HASH_TAG_LENGTH: 20,

@@ -17,14 +17,14 @@
   var enlargePicture = function () {
     if (scaleControlValue < window.constants.MAX_PHOTO_SCALE) {
       scaleControlValue += window.constants.MIN_PHOTO_SCALE;
-      image.style.transform = 'scale(' + scaleControlValue / 100 + ')';
+      image.style.transform = 'scale(' + scaleControlValue / window.constants.NUMBER_SO_SET_DEMICAL + ')';
       scaleControl.value = scaleControlValue + '%';
     }
   };
   var reducePicture = function () {
     if (scaleControlValue > window.constants.MIN_PHOTO_SCALE) {
       scaleControlValue -= window.constants.MIN_PHOTO_SCALE;
-      image.style.transform = 'scale(' + scaleControlValue / 100 + ')';
+      image.style.transform = 'scale(' + scaleControlValue / window.constants.NUMBER_SO_SET_DEMICAL + ')';
       scaleControl.value = scaleControlValue;
     }
   };

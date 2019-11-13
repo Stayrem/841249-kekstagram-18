@@ -114,9 +114,7 @@
       setInputError(hashTagInput);
       return errorText;
     }
-
-    for (var i = 0; i < newHashTagArray.length; i++) {
-      var currentHash = newHashTagArray[i];
+    newHashTagArray.forEach(function (currentHash, i) {
       if (currentHash[0] !== '#') {
         errorText = 'хэштэг должен начинаться с #';
         setInputError(hashTagInput);
@@ -130,10 +128,7 @@
         errorText = 'хэштеги не могут быть одинаковыми';
         setInputError(hashTagInput);
       }
-      if (errorText) {
-        break;
-      }
-    }
+    });
     return errorText;
   };
 

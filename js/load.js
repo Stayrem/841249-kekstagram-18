@@ -7,7 +7,7 @@
     var filterBlock = document.querySelector('.img-filters');
     xhr.responseType = 'json';
 
-    xhr.open('GET', window.constants.URL);
+    xhr.open('GET', window.constants.LOAD_URL);
 
     xhr.addEventListener('load', function () {
       if (xhr.status === window.constants.STATUS_SUCCESS) {
@@ -53,7 +53,7 @@
 
     xhr.timeout = window.constants.MAX_TIMEOUT;
 
-    xhr.open('POST', window.constants.sendURL);
+    xhr.open('POST', window.constants.SEND_URL);
     xhr.send(data);
   };
 

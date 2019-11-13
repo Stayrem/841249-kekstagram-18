@@ -14,12 +14,12 @@
       dialog.remove();
     };
 
-    var escapePressListener = function (evt) {
+    var closeErrorOnEscape = function (evt) {
       if (evt.keyCode === window.globalVars.ESC_KEYCODE) {
         closeErrorDialog();
       }
     };
-    var errorCloseEventListener = function (evt) {
+    var closeErrorOnClick = function (evt) {
       var target = evt.target;
       if (target.classList.contains('error__button')) {
         closeErrorDialog();
@@ -28,9 +28,9 @@
       }
     };
 
-    document.addEventListener('keydown', escapePressListener);
+    document.addEventListener('keydown', closeErrorOnEscape);
 
-    document.addEventListener('click', errorCloseEventListener);
+    document.addEventListener('click', closeErrorOnClick);
   };
   window.errorHandler = errorHandler;
 })();

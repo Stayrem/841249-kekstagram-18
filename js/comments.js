@@ -1,11 +1,10 @@
 'use strict';
 
 (function () {
-  var commentsShown = 5;
   var setComments = function (index) {
-    var commentsLength = window.globalVars.responseData[index].comments.length;
+    var responseComments = window.globalVars.responseData[index].comments;
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < commentsLength; i++) {
+    responseComments.forEach(function (item, i) {
       var li = document.createElement('li');
       li.classList.add('social__comment');
       if (i > 4) {
@@ -23,20 +22,21 @@
       li.appendChild(img);
       li.appendChild(p);
       fragment.appendChild(li);
-    }
+    });
+
     window.elements.comments.appendChild(fragment);
   };
   var showAllComments = function () {
     var step = 5;
-    commentsShown += step;
-    window.elements.commentsShownElement.textContent = commentsShown;
+    window.globalVars.commentsShown += step;
+    window.elements.commentsShownElement.textContent = window.globalVars.commentsShown;
     var allComments = window.elements.comments.querySelectorAll('.social__comment');
     allComments.forEach(function (item, i) {
-      if (i < commentsShown) {
+      if (i < window.globalVars.commentsShown) {
         item.classList.remove('visually-hidden');
       }
     });
-    if (commentsShown >= window.globalVars.currentCommentsCount) {
+    if (window.globalVars.commentsShown >= window.globalVars.currentCommentsCount) {
       window.elements.commentsLoader.classList.add('visually-hidden');
       window.elements.commentsShownElement.textContent = window.globalVars.currentCommentsCount;
     }

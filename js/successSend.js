@@ -16,12 +16,12 @@
       dialog.remove();
     };
 
-    var escapePressListener = function (evt) {
+    var escapePressHandler = function (evt) {
       if (evt.keyCode === window.globalVars.ESC_KEYCODE) {
         closeSuccessDialog();
       }
     };
-    var errorCloseEventListener = function (evt) {
+    var errorCloseEventHandler = function (evt) {
       var target = evt.target;
       if (target.classList.contains('success__button')) {
         closeSuccessDialog();
@@ -30,9 +30,9 @@
       }
     };
 
-    document.addEventListener('keydown', escapePressListener);
+    document.addEventListener('keydown', escapePressHandler);
 
-    document.addEventListener('click', errorCloseEventListener);
+    document.addEventListener('click', errorCloseEventHandler);
   };
   window.successFormSend = successFormSend;
 })();

@@ -12,17 +12,18 @@
 
     window.elements.commentsLoader.addEventListener('click', window.showAllComments);
 
-    var closeBigPicture = function (evt) {
+    var bigPictureCloseHandler = function (evt) {
       var target = evt.target.id;
       if (evt.keyCode === window.globalVars.ESC_KEYCODE || target === 'picture-cancel') {
         bigPicture.classList.add('hidden');
       }
+      window.globalVars.commentsShown = 5;
     };
 
     var openBigPicture = function () {
       bigPicture.classList.remove('hidden');
-      document.addEventListener('keydown', closeBigPicture);
-      bigPictureCloseBtn.addEventListener('click', closeBigPicture);
+      document.addEventListener('keydown', bigPictureCloseHandler);
+      bigPictureCloseBtn.addEventListener('click', bigPictureCloseHandler);
       window.elements.commentsLoader.classList.remove('visually-hidden');
     };
 

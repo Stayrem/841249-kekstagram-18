@@ -21,7 +21,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       var effectLine = document.querySelector('.effect-level__line');
       var effectLineWidth = effectLine.offsetWidth;
-      effectLevel.value = Math.floor(effectLevelPin.offsetLeft * 100 / effectLineWidth);
+      effectLevel.value = Math.floor(effectLevelPin.offsetLeft * window.constants.MAX_PERCENT / effectLineWidth);
       setFilter(effectRadioButtonValue);
     };
 
@@ -48,7 +48,7 @@
   });
 
   var getValueFilter = function (min, max) {
-    return (max + min) / 100 * effectLevel.value;
+    return (max + min) / window.constants.MAX_PERCENT * effectLevel.value;
   };
 
   var currentClass = null;
@@ -58,35 +58,35 @@
     effectLevelPin.style.left = '100%';
     effectRadioButtonValue = evt.target.value;
     effectLevel.value = 100;
-    window.elements.uploadImage.classList.remove(currentClass);
+    window.elements.uploadPreview.classList.remove(currentClass);
     currentClass = 'effects__preview--' + effectRadioButtonValue;
-    window.elements.uploadImage.classList.add(currentClass);
+    window.elements.uploadPreview.classList.add(currentClass);
     setFilter(effectRadioButtonValue);
   };
 
   var setFilter = function (filterType) {
     switch (filterType) {
       case 'chrome':
-        window.elements.uploadImage.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
+        window.elements.uploadPreview.style.filter = 'grayscale(' + getValueFilter(0, 1) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'sepia':
-        window.elements.uploadImage.style.filter = 'sepia(' + getValueFilter(0, 1) + ')';
+        window.elements.uploadPreview.style.filter = 'sepia(' + getValueFilter(0, 1) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'marvin':
-        window.elements.uploadImage.style.filter = 'invert(' + effectLevel + '%)';
+        window.elements.uploadPreview.style.filter = 'invert(' + effectLevel + '%)';
         effectLevelContainer.classList.remove('hidden');
         break;
       case 'phobos':
-        window.elements.uploadImage.style.filter = 'blur(' + getValueFilter(1, 3) + 'px)';
+        window.elements.uploadPreview.style.filter = 'blur(' + getValueFilter(1, 3) + 'px)';
         break;
       case 'heat':
-        window.elements.uploadImage.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
+        window.elements.uploadPreview.style.filter = 'brightness(' + getValueFilter(1, 3) + ')';
         effectLevelContainer.classList.remove('hidden');
         break;
       default:
-        window.elements.uploadImage.style.filter = '';
+        window.elements.uploadPreview.style.filter = '';
         effectLevelContainer.classList.add('hidden');
         break;
     }
@@ -114,7 +114,7 @@
       setInputError(hashTagInput);
       return errorText;
     }
-    newHashTagArray.forEach(function (currentHash, i) {
+    newHashTagArray.some(function (currentHash, i) {
       if (currentHash[0] !== '#') {
         errorText = 'хэштэг должен начинаться с #';
         setInputError(hashTagInput);
@@ -127,6 +127,9 @@
       } else if (newHashTagArray.indexOf(currentHash, i + 1) !== -1) {
         errorText = 'хэштеги не могут быть одинаковыми';
         setInputError(hashTagInput);
+      }
+      if (errorText) {
+        return;
       }
     });
     return errorText;
